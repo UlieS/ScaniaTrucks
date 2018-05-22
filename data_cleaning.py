@@ -1,10 +1,14 @@
 import pandas as pd
 import os
-
-df=pd.read_csv(os.getcwd()+"/aps_failure_training_set.csv",dtype=str)
-#print(df['ab_000'])
+from imputer import Imputer
 
 
-#check amounts of na and 0 per column
-for column in df:
-    print(df[column].isnull().count())
+df=pd.read_csv(os.getcwd()+"/data/aps_failure_training_set.csv",na_values="na",dtype=str)
+
+# transform class label to neg=1 pos=0 
+df["class"]=df["class"].apply(lambda x: 1 if x=='neg' else 0)
+df=df.apply(pd.to_numeric)
+
+# use kNN imputation to fill in missing values
+impute= Imputer()
+X_imputed = impute.knn(X=df, column='ab_000', k=3)
