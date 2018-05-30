@@ -9,6 +9,12 @@ df=pd.read_csv(os.getcwd()+"/data/aps_failure_training_set.csv",na_values="na",d
 df["class"]=df["class"].apply(lambda x: 1 if x=='neg' else 0)
 df=df.apply(pd.to_numeric)
 
-# use kNN imputation to fill in missing values
+# get percentage of NaN per column
+missingValues=df.isnull().sum()/60000
+
+# use kNN imputation to fill in missing values 
 impute= Imputer()
-X_imputed = impute.knn(X=df, column='ab_000', k=3)
+df = impute.knn(X=df, column='ab_000', k=3)
+
+
+
