@@ -15,6 +15,14 @@ def clean_data():
     missingValues = df.isnull().sum()/60000
 
     # use kNN imputation to fill in missing values
+    df2 = []
     impute = Imputer()
+    col = 0
+    for col in range(df.shape[1]):
+        result = impute.knn(X=df, column=col, k=3)
+        df.iloc[:, col] = result[:, col]
+        print(col)
+
+    df.tofile('imputed.csv', sep=',', format='%10.5f')
 
     return df
