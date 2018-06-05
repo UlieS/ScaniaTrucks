@@ -4,9 +4,9 @@ import data_cleaning
 import training
 
 # activate this if you want to clean the data
-# df = data_cleaning.clean_data()
+#  df = data_cleaning.clean_data()
 
-train = pd.read_csv(os.getcwd()+"/imputed.csv",
+train = pd.read_csv(os.getcwd()+"/training_imputed.csv",
                     na_values="na", dtype=str)
 
 test = pd.read_csv(os.getcwd()+"/data/aps_failure_test_set.csv",
