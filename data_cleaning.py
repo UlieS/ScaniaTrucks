@@ -6,8 +6,22 @@ import numpy as np
 from operator import itemgetter
 
 
-  
-def merge(corrMatrix,threshold):
+def genBoxplot(data, title, savedName, save=True):
+    '''
+    generate boxplot of missing values
+    
+    input: data [list], title [string] 
+    output: boxplot.png in /figures
+    
+    '''
+    fig, ax = plt.subplots()
+    ax.boxplot(np.array(data))
+    ax.set_title(title)
+    if save:
+        fig.savefig(os.getcwd()+"/figures/"+savedName+".png")
+    
+    
+def mergeFeatures(corrMatrix,threshold):
     '''
     analyzes the correlation between the features and compares whether highly correlated 
     features correlate highly with the same set of other features
@@ -55,21 +69,17 @@ def clean_data():
 
     # get percentage of NaN per column
     missingValues = df.isnull().sum()/60000 
+    title="Percentage of missing values per feature"
+    saveAs="boxplot1.png"
+    genBoxplot(missingValues, title,saveAs)
 
-    '''
-    # generate boxplot of missing values
-    fig, ax = plt.subplots()
-    ax.boxplot(np.array(missingValues))
-    ax.set_title("Percentage of missing values per feature")
-    fig.savefig(os.getcwd()+"/figures/boxplot.png")
-    '''
 
     # take out features with more than 60% missing values based on visual analysis of boxplot
     colsToDrop=missingValues.where(missingValues >0.6)
     df=df.drop(columns=(colsToDrop[colsToDrop.notnull()].index))
 
     corrMatrix=df.corr(method='pearson')
-    toBeMerged=merge(corrMatrix, 0.95)
+    toBeMerged=mergeFeatures(corrMatrix, 0.95)
     
     # keep the first feature of all sets of highly correlated features and drop the rest
     list(map(lambda x: x.pop(0),toBeMerged))
@@ -94,6 +104,8 @@ def clean_data():
 
     df.to_csv('training_imputed.csv', sep=',')
     '''
-    return df, toBeMerged
+    
+    
+    return df
 
-df, corr=clean_data()
+df =clean_data()
