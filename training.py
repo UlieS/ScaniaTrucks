@@ -1,3 +1,8 @@
+from sklearn.ensemble import RandomForestClassifier
+import numpy as np
+import pandas as pd
+
+np.random.seed(0)
 
 def train(train, test):
 
@@ -11,3 +16,15 @@ def train(train, test):
     knn.fit(train[x_columns], train[y_column])
 
     predictions = knn.predict(test[x_columns])
+
+
+def randomForest(train,test):
+    features=train.columns[1:]
+    #y=pd.factorize(train['class'])[0]
+    y=train['class']
+    clf = RandomForestClassifier(n_jobs=2, random_state=0)
+    clf.fit(train[features], y)
+    pred=clf.predict(test[features])
+    return pred
+
+    

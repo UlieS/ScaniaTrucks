@@ -5,12 +5,31 @@ import matplotlib.pyplot as plt
 import numpy as np
 from operator import itemgetter
 
+def impute(df,kVal=3,saveAs="training_imputed.csv"):
+    '''
+    use kNN imputation to fill in missing values, return data and save it as 
+    csv for later use
+    
+    input: data [pd.DataFrame], optional: value for k [int], default=3; name to be saved as [string]
+    output: imputed data [pd.DataFrame]
+    
+    '''
+    
+    impute = Imputer()
+    for col in range(df.shape[1]):
+        result = impute.knn(X=df, column=col, k=kVal)
+        df.iloc[:, col] = result[:, col]
+        print(col)
 
-def genBoxplot(data, title, savedName, save=True):
+    df.to_csv(saveAs, sep=',')
+    return df
+
+
+def genBoxplot(data, title="", savedName="boxplot.png", save=True):
     '''
     generate boxplot of missing values
     
-    input: data [list], title [string] 
+    input: data [list], optional: title [string], savedName [string], save [bool]
     output: boxplot.png in /figures
     
     '''
@@ -18,7 +37,7 @@ def genBoxplot(data, title, savedName, save=True):
     ax.boxplot(np.array(data))
     ax.set_title(title)
     if save:
-        fig.savefig(os.getcwd()+"/figures/"+savedName+".png")
+        fig.savefig(os.getcwd()+"/figures/"+savedName)
     
     
 def mergeFeatures(corrMatrix,threshold):
@@ -88,24 +107,21 @@ def clean_data():
         
     
     # potentially take out samples that have more than x amount of unknown values
-    #missingrows=[]
-    #for row in range(len(df)):  
-    #    missingrows.append(df.iloc[row].isnull().sum())
+#    samples=[]
+#    limit=144           # highest number of nan features per column is 145, 1
+#                        # 58 samples have this few data -> analyze if same feature groups?
+#    for row in range(len(df)):  
+#        samples.append(df.iloc[row].isnull().sum())
+#    samples=pd.Series(samples)
+#    samples=samples[samples>limit]
+    
+    #a=df.loc[samples.index,df.notnull().all()]
+    #a[a==1].count()      # 157 samples have values for one feature only -> first one; all but one belong to class 1 
+    # -> cannot be a predictor ultimately 
     
     
-    
-    # use kNN imputation to fill in missing values
-    '''
-    impute = Imputer()
-    for col in range(df.shape[1]):
-        result = impute.knn(X=df, column=col, k=3)
-        df.iloc[:, col] = result[:, col]
-        print(col)
-
-    df.to_csv('training_imputed.csv', sep=',')
-    '''
-    
+    df=impute(df)
     
     return df
 
-df =clean_data()
+#df =clean_data()
