@@ -4,6 +4,7 @@ from imputer import Imputer
 import matplotlib.pyplot as plt
 import numpy as np
 from operator import itemgetter
+import plotting
 
 def impute(df,kVal=3,saveAs="training_imputed.csv"):
     '''
@@ -24,21 +25,6 @@ def impute(df,kVal=3,saveAs="training_imputed.csv"):
     df.to_csv(saveAs, sep=',')
     return df
 
-
-def genBoxplot(data, title="", savedName="boxplot.png", save=True):
-    '''
-    generate boxplot of missing values
-    
-    input: data [list], optional: title [string], savedName [string], save [bool]
-    output: boxplot.png in /figures
-    
-    '''
-    fig, ax = plt.subplots()
-    ax.boxplot(np.array(data))
-    ax.set_title(title)
-    if save:
-        fig.savefig(os.getcwd()+"/figures/"+savedName)
-    
     
 def mergeFeatures(corrMatrix,threshold):
     '''
@@ -90,20 +76,20 @@ def clean_data():
     missingValues = df.isnull().sum()/60000 
     title="Percentage of missing values per feature"
     saveAs="boxplot1.png"
-    genBoxplot(missingValues, title,saveAs)
+    plotting.Boxplot(missingValues, title,saveAs)
 
 
     # take out features with more than 60% missing values based on visual analysis of boxplot
-    colsToDrop=missingValues.where(missingValues >0.6)
-    df=df.drop(columns=(colsToDrop[colsToDrop.notnull()].index))
+    #colsToDrop=missingValues.where(missingValues >0.6)
+    #df=df.drop(columns=(colsToDrop[colsToDrop.notnull()].index))
 
-    corrMatrix=df.corr(method='pearson')
-    toBeMerged=mergeFeatures(corrMatrix, 0.95)
+    #corrMatrix=df.corr(method='pearson')
+    #toBeMerged=mergeFeatures(corrMatrix, 0.95)
     
     # keep the first feature of all sets of highly correlated features and drop the rest
-    list(map(lambda x: x.pop(0),toBeMerged))
-    colsToDrop = [item for sublist in toBeMerged for item in sublist]
-    df=df.drop(columns=colsToDrop)
+    #list(map(lambda x: x.pop(0),toBeMerged))
+    #colsToDrop = [item for sublist in toBeMerged for item in sublist]
+    #df=df.drop(columns=colsToDrop)
         
     
     # potentially take out samples that have more than x amount of unknown values
@@ -120,8 +106,7 @@ def clean_data():
     # -> cannot be a predictor ultimately 
     
     
-    df=impute(df)
+    df=impute(df,saveAs="training_imputed_allFeatures.csv")
     
     return df
 
-#df =clean_data()

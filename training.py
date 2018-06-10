@@ -1,8 +1,8 @@
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import pandas as pd
+import evaluation
 
-np.random.seed(0)
 
 def train(train, test):
 
@@ -18,13 +18,21 @@ def train(train, test):
     predictions = knn.predict(test[x_columns])
 
 
-def randomForest(train,test):
+def randomForest(train,test,i,metrics):
+    np.random.seed(i)
     features=train.columns[1:]
-    #y=pd.factorize(train['class'])[0]
     y=train['class']
-    clf = RandomForestClassifier(n_jobs=2, random_state=0)
-    clf.fit(train[features], y)
+    weights=y.apply(lambda x: 0.95 if x == 1 else 0.05)
+    clf = RandomForestClassifier(n_jobs=2)#, random_state=0)
+    clf.fit(train[features], y, sample_weight=weights)
     pred=clf.predict(test[features])
-    return pred
+    
+    confMat=pd.crosstab(test['class'], pred, rownames=['Actual class'], colnames=['Predicted class'])
+    metrics=evaluation.getEvaluationMetrics(confMat,metrics)
+#    for metric,value in metrics.items():
+#        print(metric+ ": "+ str(value))
+    #pred_prob=pd.DataFrame(clf.predict_proba(test[features]))
+    #feature_importance=list(zip(train[features], clf.feature_importances_))
+    return metrics
 
     
