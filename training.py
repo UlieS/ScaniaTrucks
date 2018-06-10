@@ -4,18 +4,20 @@ import pandas as pd
 import evaluation
 
 
-def train(train, test):
+
+def train_knn(train, test):
 
     # the labels
     x_columns = list(train)[1:171]
     y_column = ['class']
 
-    # create a regressor
-    from sklearn.neighbors import KNeighborsRegressor
-    knn = KNeighborsRegressor(n_neighbors=5)
-    knn.fit(train[x_columns], train[y_column])
+    # create a classifier
+    from sklearn.neighbors import KNeighborsClassifier
+    knn = KNeighborsClassifier(n_neighbors=5)
+    knn.fit(train[x_columns], train[y_column].values.ravel())
 
     predictions = knn.predict(test[x_columns])
+    return predictions
 
 
 def randomForest(train,test,i,metrics):

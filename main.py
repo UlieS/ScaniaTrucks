@@ -14,7 +14,7 @@ train = pd.read_csv(os.getcwd()+"/training_imputed_allFeatures.csv",
 #print(train.describe())
 
 # impute test set - also apply same data cleaning procedure as training set?
-#test=data_cleaning.impute(test,saveAs="test_imputed.csv")
+# test=data_cleaning.impute(test,saveAs="test_imputed.csv")
 
 test = pd.read_csv(os.getcwd()+"/test_imputed.csv",
                    na_values="na", dtype=str)
@@ -23,17 +23,17 @@ test = pd.read_csv(os.getcwd()+"/test_imputed.csv",
 #test["class"] = test["class"].apply(lambda x: 1 if x == 'neg' else 0)
 test = test.apply(pd.to_numeric)
 
-#test=data_cleaning.clean_data(test)
+training.train_knn(train, test)
 
-#training.train(train, test)
-
+# feat=train_knn.columns[1:]
 # train RandomForest certain amount of iterations and get evaluation metrics
+
 metrics = [0]*4
 r=list(range(10))
 np.random.shuffle(r)
 for i in r:
     seed=i
-    metrics=training.randomForest(train,test,seed,metrics)
+    metrics=training.train_randomForest(train,test,seed,metrics)
 
 metrics = [i/len(r) for i in metrics]
 evaluation.printMetrics(metrics)
