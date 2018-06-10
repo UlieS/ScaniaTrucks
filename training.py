@@ -11,7 +11,7 @@ def train_knn(train, test):
     x_columns = list(train)[1:171]
     y_column = ['class']
 
-    # create a regressor
+    # create a classifier
     from sklearn.neighbors import KNeighborsClassifier
     knn = KNeighborsClassifier(n_neighbors=5)
     knn.fit(train[x_columns], train[y_column].values.ravel())
