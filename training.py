@@ -4,7 +4,6 @@ import pandas as pd
 import evaluation
 
 
-
 def train_knn(train, test):
 
     # the labels
@@ -20,21 +19,20 @@ def train_knn(train, test):
     return predictions
 
 
-def randomForest(train,test,i,metrics):
+def train_randomForest(train, test, i, metrics):
     np.random.seed(i)
-    features=train.columns[1:]
-    y=train['class']
-    weights=y.apply(lambda x: 0.95 if x == 1 else 0.05)
-    clf = RandomForestClassifier(n_jobs=2)#, random_state=0)
+    features = train.columns[1:]
+    y = train['class']
+    weights = y.apply(lambda x: 0.95 if x == 1 else 0.05)
+    clf = RandomForestClassifier(n_jobs=2)  # , random_state=0)
     clf.fit(train[features], y, sample_weight=weights)
-    pred=clf.predict(test[features])
-    
-    confMat=pd.crosstab(test['class'], pred, rownames=['Actual class'], colnames=['Predicted class'])
-    metrics=evaluation.getEvaluationMetrics(confMat,metrics)
+    pred = clf.predict(test[features])
+
+    confMat = pd.crosstab(test['class'], pred, rownames=[
+                          'Actual class'], colnames=['Predicted class'])
+    metrics = evaluation.getEvaluationMetrics(confMat, metrics)
 #    for metric,value in metrics.items():
 #        print(metric+ ": "+ str(value))
-    #pred_prob=pd.DataFrame(clf.predict_proba(test[features]))
+    # pred_prob=pd.DataFrame(clf.predict_proba(test[features]))
     #feature_importance=list(zip(train[features], clf.feature_importances_))
     return metrics
-
-    
