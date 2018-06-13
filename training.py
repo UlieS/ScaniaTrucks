@@ -12,15 +12,16 @@ def train_knn(train, test):
 
     # create a classifier
     from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=5)
+    knn = KNeighborsClassifier(n_neighbors=5, n_jobs=2)
     knn.fit(train[x_columns], train[y_column].values.ravel())
 
-    predictions = knn.predict(test[x_columns])
-    return predictions
+    # knn.predict_proba(test[x_columns])
+    pred = knn.predict(test[x_columns])
+    return pred
 
 
-def train_randomForest(train, test, i, metrics):
-    np.random.seed(i)
+def train_randomForest(train, test, seed, metrics):
+    np.random.seed(seed)
     features = train.columns[1:]
     y = train['class']
     weights = y.apply(lambda x: 0.95 if x == 1 else 0.05)
@@ -28,11 +29,4 @@ def train_randomForest(train, test, i, metrics):
     clf.fit(train[features], y, sample_weight=weights)
     pred = clf.predict(test[features])
 
-    confMat = pd.crosstab(test['class'], pred, rownames=[
-                          'Actual class'], colnames=['Predicted class'])
-    metrics = evaluation.getEvaluationMetrics(confMat, metrics)
-#    for metric,value in metrics.items():
-#        print(metric+ ": "+ str(value))
-    # pred_prob=pd.DataFrame(clf.predict_proba(test[features]))
-    #feature_importance=list(zip(train[features], clf.feature_importances_))
-    return metrics
+    return pred
