@@ -12,11 +12,16 @@ def train_knn(train, test):
 
     # create a classifier
     from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=5, n_jobs=2)
+    knn = KNeighborsClassifier(n_neighbors=5, n_jobs=4)
     knn.fit(train[x_columns], train[y_column].values.ravel())
 
-    # knn.predict_proba(test[x_columns])
+    pred_proba = knn.predict_proba(test[x_columns])
     pred = knn.predict(test[x_columns])
+
+    for i in range(len(pred)):
+        if(pred_proba[i][0] >= 0.2):
+            pred[i] = 0
+
     return pred
 
 

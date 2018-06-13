@@ -27,12 +27,14 @@ r = list(range(1))
 np.random.shuffle(r)
 for i in r:
     seed = i
+    # train the knn classifier
+    pred_knn = training.train_knn(train, test)
+    metrics[1] = evaluation.createEvaluationMetrics(test, pred_knn, metrics[1])
+    # train the random forest classifier
     pred_rf = training.train_randomForest(train, test, seed, metrics)
     metrics[0] = evaluation.createEvaluationMetrics(test, pred_rf, metrics[0])
 
-    pred_knn = training.train_knn(train, test)
-    metrics[1] = evaluation.createEvaluationMetrics(test, pred_knn, metrics[1])
 
-#metrics = [i/len(r) for i in metrics]
+# metrics = [i/len(r) for i in metrics]
 # evaluation.printMetrics(metrics)
 print(metrics)
