@@ -9,7 +9,7 @@ import evaluation
 # activate this if you want to clean the data
 # df = data_cleaning.clean_data()
 
-train = pd.read_csv(os.getcwd()+"/training_imputed_allFeatures.csv",
+train = pd.read_csv(os.getcwd()+"/training_imputed.csv",
                     na_values="na", dtype=np.float64)
 
 # test=data_cleaning.impute(test,saveAs="test_imputed.csv")
@@ -28,10 +28,10 @@ np.random.shuffle(r)
 for i in r:
     seed = i
     # train the knn classifier
-    pred_knn = training.train_knn(train, test)
+    pred_knn = training.train_knn(train, test, seed)
     metrics[1] = evaluation.createEvaluationMetrics(test, pred_knn, metrics[1])
     # train the random forest classifier
-    pred_rf = training.train_randomForest(train, test, seed, metrics)
+    pred_rf = training.train_randomForest(train, test, seed)
     metrics[0] = evaluation.createEvaluationMetrics(test, pred_rf, metrics[0])
 
 
