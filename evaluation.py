@@ -38,9 +38,12 @@ def createEvaluationMetrics(test, pred, metrics):
     #feature_importance=list(zip(train[features], clf.feature_importances_))
     return metrics
 
-
-def printMetrics(metrics):
-    metricNames = ["Total Costs", "Accuracy", "Precision", "Recall"]
-
+def printMetrics(metrics,times):
+    # get average 
+    avgMetrics = [i/times for i in metrics]
+    metricNames = ["Total Costs","Accuracy","Precision","Recall"]
+    print("Average evaluation measures after "+ str(times) +" iterations")
     for i in range(len(metricNames)):
-        print(metricNames[i] + ": " + str(metrics[i]) + "\n")
+        print(metricNames[i]+ ": " + str(avgMetrics[i])+ "\n")
+
+

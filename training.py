@@ -13,7 +13,7 @@ def train_knn(train, test, seed):
 
     # create a classifier
     from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=10, n_jobs=4, weights="distance")
+    knn = KNeighborsClassifier(n_neighbors=10, n_jobs=4)
     knn.fit(train[x_columns], train[y_column].values.ravel())
 
     pred_proba = knn.predict_proba(test[x_columns])
@@ -34,5 +34,5 @@ def train_randomForest(train, test, seed):
     clf = RandomForestClassifier(n_jobs=2)  # , random_state=0)
     clf.fit(train[features], y, sample_weight=weights)
     pred = clf.predict(test[features])
-
+    # feature_importance=list(zip(train[features],clf.feature_importances_))
     return pred

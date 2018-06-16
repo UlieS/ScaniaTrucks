@@ -22,7 +22,7 @@ def impute(df,kVal=3,saveAs="training_imputed.csv"):
         df.iloc[:, col] = result[:, col]
         print(col)
 
-    df.to_csv(saveAs, sep=',')
+    df.to_csv(os.getcwd()+"/data/"+saveAs, sep=',')
     return df
 
     

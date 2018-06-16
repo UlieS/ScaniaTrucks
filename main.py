@@ -9,13 +9,14 @@ import evaluation
 # activate this if you want to clean the data
 # df = data_cleaning.clean_data()
 
-train = pd.read_csv(os.getcwd()+"/training_imputed.csv",
+train = pd.read_csv(os.getcwd()+"/data/training_imputed.csv",
                     na_values="na", dtype=np.float64)
 
 # test=data_cleaning.impute(test,saveAs="test_imputed.csv")
 
-test = pd.read_csv(os.getcwd()+"/test_imputed.csv",
+test = pd.read_csv(os.getcwd()+"/data/test_imputed.csv",
                    na_values="na", dtype=str)
+
 
 # transform class label to neg=1 pos=0
 test = test.apply(pd.to_numeric)
@@ -23,8 +24,9 @@ test = test.apply(pd.to_numeric)
 # train RandomForest and knn a certain amount of iterations and get evaluation metrics
 
 metrics = [[0]*4, [0]*4]
-r = list(range(1))
+r = list(range(1000))
 np.random.shuffle(r)
+r = r[:1]
 for i in r:
     seed = i
     # train the knn classifier
