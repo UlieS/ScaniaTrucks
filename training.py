@@ -25,13 +25,12 @@ def train_knn(train, test):
     return pred
 
 
-def train_randomForest(train, test, seed, metrics):
+def train_randomForest(train, test, seed, metrics, i):
     np.random.seed(seed)
     features = train.columns[2:]
     y = train['class']
-    weights = y.apply(lambda x: 0.95 if x == 1 else 0.05)
-    clf = RandomForestClassifier(n_jobs=2)  # , random_state=0)
-    clf.fit(train[features], y, sample_weight=weights)
+    clf = RandomForestClassifier(criterion='gini',n_jobs=-1, bootstrap=False, max_depth=6, max_features=20, min_samples_leaf=17, min_samples_split=6, class_weight={1:50, 0:1})  # , random_state=0)
+    clf.fit(train[features], y)
     pred = clf.predict(test[features])
-    #feature_importance=list(zip(train[features],clf.feature_importances_))
-    return pred
+    feature_importance=list(zip(train[features],clf.feature_importances_))
+    return pred, feature_importance
