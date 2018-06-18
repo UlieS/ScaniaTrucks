@@ -18,7 +18,6 @@ train["class"]=train["class"].apply(lambda x: 1 if x == 0 else 0)
 # test=data_cleaning.impute(test,saveAs="test_imputed.csv")
 
 
-<<<<<<< HEAD
 test = pd.read_csv(os.getcwd()+"/data/test_imputed.csv",
                    na_values="na", dtype=np.float)
 test["class"]=test["class"].apply(lambda x: 1 if x == 0 else 0)
@@ -26,14 +25,10 @@ test["class"]=test["class"].apply(lambda x: 1 if x == 0 else 0)
 
 metrics = [[0]*5, [0]*5]
 r = list(range(1000))
-#np.random.shuffle(r)
+np.random.shuffle(r)
 r=r[:20]
-nrOfFeat=0
-maxDepth=1
 plotdata=[]
 for i in r:
-    maxDepth += 1
-    nrOfFeat += 5
     seed = i
     # train the knn classifier
     #pred_knn = training.train_knn(train, test)
@@ -42,14 +37,15 @@ for i in r:
     pred_rf, feat_imp= training.train_randomForest(train, test, seed, metrics,maxDepth)
     metrics[0] = evaluation.createEvaluationMetrics(test["class"], pred_rf, metrics[0])
     plotdata.append(evaluation.createPlottingMetrics(test["class"], pred_rf))
-=======
-# transform class label to neg=1 pos=0
-test = test.apply(pd.to_numeric)
->>>>>>> da0cc1d9550f19442aa8bd42d63ba64bb3bcbad5
 
 print(metrics)
 plotting.LinePlot(plotdata)
+
+
+
 '''
+used for testing different parameters, feature numbers
+
 #plotdata=[]    
 feat_imp = (sorted(feat_imp,key=itemgetter(1)))
 y=[x[0] for x in feat_imp[len(feat_imp)-17:]]
@@ -58,19 +54,13 @@ train_lessFeat = train[y]
 test_lessFeat = test[y]
 
 r = list(range(1000))
-<<<<<<< HEAD
 #np.random.shuffle(r)
 r=r[:10]
-=======
-np.random.shuffle(r)
-r = r[:1]
->>>>>>> da0cc1d9550f19442aa8bd42d63ba64bb3bcbad5
 for i in r:
     maxDepth += 1
     nrOfFeat += 5
     seed = i
     # train the knn classifier
-<<<<<<< HEAD
     #pred_knn = training.train_knn(train, test)
     #metrics[1] = evaluation.createEvaluationMetrics(test["class"], pred_knn, metrics[1])
     # train the random forest classifier
@@ -81,13 +71,6 @@ for i in r:
 
 #plotting.featPlot(feat_imp)
 #plotting.LinePlot(plotdata)
-=======
-    pred_knn = training.train_knn(train, test, seed)
-    metrics[1] = evaluation.createEvaluationMetrics(test, pred_knn, metrics[1])
-    # train the random forest classifier
-    pred_rf = training.train_randomForest(train, test, seed)
-    metrics[0] = evaluation.createEvaluationMetrics(test, pred_rf, metrics[0])
->>>>>>> da0cc1d9550f19442aa8bd42d63ba64bb3bcbad5
 
 
 # metrics = [i/len(r) for i in metrics]
