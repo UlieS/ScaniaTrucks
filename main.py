@@ -31,10 +31,10 @@ plotdata=[]
 for i in r:
     seed = i
     # train the knn classifier
-    #pred_knn = training.train_knn(train, test)
-    #metrics[1] = evaluation.createEvaluationMetrics(test["class"], pred_knn, metrics[1])
+    pred_knn = training.train_knn(train, test, seed)
+    metrics[1] = evaluation.createEvaluationMetrics(test["class"], pred_knn, metrics[1])
     # train the random forest classifier
-    pred_rf, feat_imp= training.train_randomForest(train, test, seed, metrics,maxDepth)
+    pred_rf, feat_imp= training.train_randomForest(train, test, seed, metrics,1)
     metrics[0] = evaluation.createEvaluationMetrics(test["class"], pred_rf, metrics[0])
     plotdata.append(evaluation.createPlottingMetrics(test["class"], pred_rf))
 

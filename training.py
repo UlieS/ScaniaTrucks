@@ -13,15 +13,15 @@ def train_knn(train, test, seed):
 
     # create a classifier
     from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=10, n_jobs=4)
+    knn = KNeighborsClassifier(n_neighbors=10, n_jobs=4, p=1)
     knn.fit(train[x_columns], train[y_column].values.ravel())
 
     pred_proba = knn.predict_proba(test[x_columns])
     pred = knn.predict(test[x_columns])
 
     for i in range(len(pred)):
-        if(pred_proba[i][0] >= 0.1):
-            pred[i] = 0
+        if(pred_proba[i][1] >= 0.1):
+            pred[i] = 1
 
     return pred
 
